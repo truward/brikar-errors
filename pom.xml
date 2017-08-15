@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.truward.brikar.protobuf</groupId>
+    <artifactId>brikar-protobuf</artifactId>
+    <version>2.0.1</version>
+  </parent>
+
+  <groupId>com.truward.brikar.error</groupId>
+  <artifactId>brikar-errors</artifactId>
+  <version>2.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <description>
+    A set of libraries for error handling for SOA.
+    Error model inspired by Microsoft One API guidelines.
+  </description>
+  <name>Brikar Error-Handling Libraries</name>
+  <url>https://github.com/truward/brikar-errors</url>
+
+  <properties>
+    <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
+
+    <!--  compiler settings -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <!-- encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <scm>
+    <connection>scm:git:https://github.com:truward/brikar-errors.git</connection>
+    <developerConnection>scm:git:https://github.com/truward/brikar-errors.git</developerConnection>
+    <url>https://github.com/truward/brikar-errors.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <inceptionYear>2017</inceptionYear>
+
+  <developers>
+    <developer>
+      <id>alexshabanov</id>
+      <name>Alexander Shabanov</name>
+      <email>avshabanov@gmail.com</email>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <url>https://github.com/truward/brikar-errors/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <modules>
+    <module>error-model</module>
+    <module>rest-errors</module>
+    <module>rest-errors-parser</module>
+  </modules>
+
+  <dependencyManagement>
+
+    <dependencies>
+      <!-- Project Dependencies -->
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>error-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>rest-errors</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.error</groupId>
+        <artifactId>rest-errors-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Protobuf Serialization -->
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>spring-protobuf-http-bin</artifactId>
+        <version>${brikar-protobuf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.truward.brikar.protobuf</groupId>
+        <artifactId>spring-protobuf-http-json</artifactId>
+        <version>${brikar-protobuf.version}</version>
+      </dependency>
+
+      <!-- Servlet API -->
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- JSR-305 for @NotNull etc. -->
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>1.3.9</version>
+      </dependency>
+
+      <!-- Test scope -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.2</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>1.9.0</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Automatically added dependencies -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test scope -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+
+    <!-- This profile SHOULD be activated when making release -->
+    <profile>
+      <id>release</id>
+
+      <build>
+        <plugins>
+          <!-- Staging plugin - http://central.sonatype.org/pages/apache-maven.html -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.2</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+
+          <!-- Release plugin -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <autoVersionSubmodules>true</autoVersionSubmodules>
+              <useReleaseProfile>false</useReleaseProfile>
+              <releaseProfiles>release</releaseProfiles>
+              <goals>deploy</goals>
+            </configuration>
+          </plugin>
+
+          <!-- Encryption plugin for deploying release artifacts -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Generate sources and javadoc -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

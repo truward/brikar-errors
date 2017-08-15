@@ -1,2 +1,3 @@
-# brikar-errors
-Error handling primitives
+# Brikar Errors
+
+A set of error handling primitives.
