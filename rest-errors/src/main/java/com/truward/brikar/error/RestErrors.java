@@ -3,7 +3,6 @@ package com.truward.brikar.error;
 import com.truward.brikar.error.model.ErrorV1;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Utility class for exposing/consuming standard error model.
@@ -33,27 +32,51 @@ public abstract class RestErrors {
   //
 
   public HttpRestErrorException badRequest(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_BAD_REQUEST, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.BAD_REQUEST.getHttpCode(),
+        error);
   }
 
   public HttpRestErrorException unauthorized(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_UNAUTHORIZED, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.UNAUTHORIZED.getHttpCode(),
+        error);
   }
 
   public HttpRestErrorException forbidden(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_FORBIDDEN, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.FORBIDDEN.getHttpCode(),
+        error);
   }
 
   public HttpRestErrorException notFound(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_NOT_FOUND, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.NOT_FOUND.getHttpCode(),
+        error);
+  }
+
+  public HttpRestErrorException tooManyRequests(ErrorV1.Error error) {
+    return new HttpRestErrorException(
+        StandardRestErrorCode.TOO_MANY_REQUESTS.getHttpCode(),
+        error);
   }
 
   public HttpRestErrorException internalServerError(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.INTERNAL.getHttpCode(),
+        error);
   }
 
   public HttpRestErrorException notImplemented(ErrorV1.Error error) {
-    return new HttpRestErrorException(HttpServletResponse.SC_NOT_IMPLEMENTED, error);
+    return new HttpRestErrorException(
+        StandardRestErrorCode.NOT_IMPLEMENTED.getHttpCode(),
+        error);
+  }
+
+  public HttpRestErrorException serviceUnavailable(ErrorV1.Error error) {
+    return new HttpRestErrorException(
+        StandardRestErrorCode.SERVICE_UNAVAILABLE.getHttpCode(),
+        error);
   }
 
   //
@@ -65,7 +88,7 @@ public abstract class RestErrors {
   }
 
   public HttpRestErrorException unsupported() {
-    return notImplemented(errorBuilder(StandardRestErrorCode.UNSUPPORTED).build());
+    return notImplemented(errorBuilder(StandardRestErrorCode.NOT_IMPLEMENTED).build());
   }
 
   public HttpRestErrorException forbidden() {

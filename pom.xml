@@ -109,14 +109,6 @@
         <version>${brikar-protobuf.version}</version>
       </dependency>
 
-      <!-- Servlet API -->
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.1.0</version>
-        <scope>provided</scope>
-      </dependency>
-
       <!-- JSR-305 for @NotNull etc. -->
       <dependency>
         <groupId>com.google.code.findbugs</groupId>

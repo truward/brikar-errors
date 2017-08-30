@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +54,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        StandardRestErrorCode.UNSUPPORTED.getDescription(), StandardRestErrorCode.UNSUPPORTED);
+        StandardRestErrorCode.NOT_IMPLEMENTED.getDescription(), StandardRestErrorCode.NOT_IMPLEMENTED);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
   }
 
@@ -116,13 +115,20 @@ public final class RestErrorsTest {
 
   @Test
   public void shouldMatchStatusCodes() {
-    assertEquals(HttpServletResponse.SC_BAD_REQUEST, restErrors.badRequest(SAMPLE_ERROR).getStatusCode());
-    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, restErrors.unauthorized(SAMPLE_ERROR).getStatusCode());
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, restErrors.forbidden(SAMPLE_ERROR).getStatusCode());
-    assertEquals(HttpServletResponse.SC_NOT_FOUND, restErrors.notFound(SAMPLE_ERROR).getStatusCode());
-    assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, restErrors.internalServerError(SAMPLE_ERROR)
+    assertEquals(400 /* BAD_REQUEST */, restErrors.badRequest(SAMPLE_ERROR).getStatusCode());
+    assertEquals(401 /* UNAUTHORIZED */, restErrors.unauthorized(SAMPLE_ERROR).getStatusCode());
+    assertEquals(403 /* FORBIDDEN */, restErrors.forbidden(SAMPLE_ERROR).getStatusCode());
+    assertEquals(404 /* NOT FOUND */, restErrors.notFound(SAMPLE_ERROR).getStatusCode());
+    assertEquals(429 /* TOO MANY REQUESTS */, restErrors.tooManyRequests(SAMPLE_ERROR).getStatusCode());
+    assertEquals(500 /* INTERNAL ERROR */, restErrors.internalServerError(SAMPLE_ERROR)
         .getStatusCode());
-    assertEquals(HttpServletResponse.SC_NOT_IMPLEMENTED, restErrors.notImplemented(SAMPLE_ERROR).getStatusCode());
+    assertEquals( 501 /* NOT IMPLEMENTED */, restErrors.notImplemented(SAMPLE_ERROR).getStatusCode());
+    assertEquals( 503 /* SERVICE UNAVAILABLE */, restErrors.serviceUnavailable(SAMPLE_ERROR).getStatusCode());
+  }
+
+  @Test
+  public void shouldStoreError() {
+    assertEquals(SAMPLE_ERROR, RestErrors.errorResponse(SAMPLE_ERROR).getError());
   }
 
   @Test
