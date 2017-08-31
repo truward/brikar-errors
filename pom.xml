@@ -19,18 +19,6 @@
   <name>Brikar Error-Handling Libraries</name>
   <url>https://github.com/truward/brikar-errors</url>
 
-  <properties>
-    <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
-
-    <!--  compiler settings -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-
-    <!-- encoding -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-  </properties>
-
   <scm>
     <connection>scm:git:https://github.com:truward/brikar-errors.git</connection>
     <developerConnection>scm:git:https://github.com/truward/brikar-errors.git</developerConnection>
@@ -75,7 +63,22 @@
     <module>error-model</module>
     <module>rest-errors</module>
     <module>rest-errors-parser</module>
+    <module>jetty-rest-errors</module>
   </modules>
+
+  <properties>
+    <brikar-protobuf.version>2.0.1</brikar-protobuf.version>
+
+    <jetty.version>8.2.0.v20160908</jetty.version>
+
+    <!--  compiler settings -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <!-- encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
   <dependencyManagement>
 
@@ -107,6 +110,23 @@
         <groupId>com.truward.brikar.protobuf</groupId>
         <artifactId>spring-protobuf-http-json</artifactId>
         <version>${brikar-protobuf.version}</version>
+      </dependency>
+
+      <!-- Jetty -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-servlet</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>${jetty.version}</version>
       </dependency>
 
       <!-- JSR-305 for @NotNull etc. -->

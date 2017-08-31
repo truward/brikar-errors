@@ -1,7 +1,13 @@
 
-# 2.0.3 (PLANNED)
+# 2.0.4 (PLANNED)
 
 TBD
+
+# 2.0.3
+
+* Add ``httpStatus`` field to RestErrorCode
+* Add SimpleRestErrorCode.
+* Add ``jetty-rest-errors`` module with global jetty error registration capabilities
 
 # 2.0.2
 

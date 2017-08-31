@@ -33,49 +33,49 @@ public abstract class RestErrors {
 
   public HttpRestErrorException badRequest(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.BAD_REQUEST.getHttpCode(),
+        StandardRestErrorCodes.BAD_REQUEST.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException unauthorized(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.UNAUTHORIZED.getHttpCode(),
+        StandardRestErrorCodes.UNAUTHORIZED.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException forbidden(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.FORBIDDEN.getHttpCode(),
+        StandardRestErrorCodes.FORBIDDEN.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException notFound(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.NOT_FOUND.getHttpCode(),
+        StandardRestErrorCodes.NOT_FOUND.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException tooManyRequests(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.TOO_MANY_REQUESTS.getHttpCode(),
+        StandardRestErrorCodes.TOO_MANY_REQUESTS.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException internalServerError(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.INTERNAL.getHttpCode(),
+        StandardRestErrorCodes.INTERNAL.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException notImplemented(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.NOT_IMPLEMENTED.getHttpCode(),
+        StandardRestErrorCodes.NOT_IMPLEMENTED.getHttpStatus(),
         error);
   }
 
   public HttpRestErrorException serviceUnavailable(ErrorV1.Error error) {
     return new HttpRestErrorException(
-        StandardRestErrorCode.SERVICE_UNAVAILABLE.getHttpCode(),
+        StandardRestErrorCodes.SERVICE_UNAVAILABLE.getHttpStatus(),
         error);
   }
 
@@ -84,19 +84,19 @@ public abstract class RestErrors {
   //
 
   public HttpRestErrorException invalidArgument(String argumentName) {
-    return badRequest(errorBuilder(StandardRestErrorCode.INVALID_ARGUMENT).setTarget(argumentName).build());
+    return badRequest(errorBuilder(StandardRestErrorCodes.INVALID_ARGUMENT).setTarget(argumentName).build());
   }
 
   public HttpRestErrorException unsupported() {
-    return notImplemented(errorBuilder(StandardRestErrorCode.NOT_IMPLEMENTED).build());
+    return notImplemented(errorBuilder(StandardRestErrorCodes.NOT_IMPLEMENTED).build());
   }
 
   public HttpRestErrorException forbidden() {
-    return forbidden(errorBuilder(StandardRestErrorCode.FORBIDDEN).build());
+    return forbidden(errorBuilder(StandardRestErrorCodes.FORBIDDEN).build());
   }
 
   public HttpRestErrorException internalServerError(String message) {
-    return internalServerError(errorBuilder(StandardRestErrorCode.INTERNAL)
+    return internalServerError(errorBuilder(StandardRestErrorCodes.INTERNAL)
             .setMessage(message)
             .build());
   }

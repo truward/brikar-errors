@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>brikar-errors</artifactId>
+    <groupId>com.truward.brikar.error</groupId>
+    <version>2.0.3-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>jetty-rest-errors</artifactId>
+
+  <packaging>jar</packaging>
+  <name>Brikar Extensions for Global Jetty Errors</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.truward.brikar.protobuf</groupId>
+      <artifactId>spring-protobuf-http-bin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.truward.brikar.protobuf</groupId>
+      <artifactId>spring-protobuf-http-json</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.truward.brikar.error</groupId>
+      <artifactId>rest-errors</artifactId>
+    </dependency>
+
+    <!-- Jetty -->
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Test-only scope -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.truward.brikar.error</groupId>
+      <artifactId>rest-errors-parser</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,9 +1,6 @@
 package com.truward.brikar.error.test;
 
-import com.truward.brikar.error.HttpRestErrorException;
-import com.truward.brikar.error.RestErrorCode;
-import com.truward.brikar.error.RestErrors;
-import com.truward.brikar.error.StandardRestErrorCode;
+import com.truward.brikar.error.*;
 import com.truward.brikar.error.model.ErrorV1;
 import org.junit.Test;
 
@@ -42,7 +39,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        StandardRestErrorCode.INVALID_ARGUMENT.getDescription(), StandardRestErrorCode.INVALID_ARGUMENT);
+        StandardRestErrorCodes.INVALID_ARGUMENT.getDescription(), StandardRestErrorCodes.INVALID_ARGUMENT);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
     assertEquals(argumentName, err.getTarget());
   }
@@ -54,7 +51,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        StandardRestErrorCode.NOT_IMPLEMENTED.getDescription(), StandardRestErrorCode.NOT_IMPLEMENTED);
+        StandardRestErrorCodes.NOT_IMPLEMENTED.getDescription(), StandardRestErrorCodes.NOT_IMPLEMENTED);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
   }
 
@@ -65,7 +62,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        StandardRestErrorCode.FORBIDDEN.getDescription(), StandardRestErrorCode.FORBIDDEN);
+        StandardRestErrorCodes.FORBIDDEN.getDescription(), StandardRestErrorCodes.FORBIDDEN);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
   }
 
@@ -78,7 +75,7 @@ public final class RestErrorsTest {
     final HttpRestErrorException e = restErrors.internalServerError(message);
 
     // Then:
-    final ErrorV1.Error err = verifyException(e, message, StandardRestErrorCode.INTERNAL);
+    final ErrorV1.Error err = verifyException(e, message, StandardRestErrorCodes.INTERNAL);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
   }
 
@@ -92,7 +89,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        StandardRestErrorCode.FORBIDDEN.getDescription(), StandardRestErrorCode.FORBIDDEN);
+        StandardRestErrorCodes.FORBIDDEN.getDescription(), StandardRestErrorCodes.FORBIDDEN);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
     assertEquals(resourceName, err.getTarget());
   }
@@ -109,7 +106,7 @@ public final class RestErrorsTest {
 
     // Then:
     final ErrorV1.Error err = verifyException(e,
-        TestErrorCode.INVALID_FORM_PARAMETERS.getDescription(), TestErrorCode.INVALID_FORM_PARAMETERS, parameters);
+        INVALID_FORM_PARAMETERS.getDescription(), INVALID_FORM_PARAMETERS, parameters);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
   }
 
@@ -141,7 +138,7 @@ public final class RestErrorsTest {
 
     // When:
     final HttpRestErrorException e = restErrors.internalServerError(restErrors
-        .errorBuilder(StandardRestErrorCode.INTERNAL)
+        .errorBuilder(StandardRestErrorCodes.INTERNAL)
         .addParameters(RestErrors.stringParameter(formVarName, formVarValue))
         .setInnerError(SAMPLE_ERROR)
         .setMessage(message)
@@ -150,7 +147,7 @@ public final class RestErrorsTest {
     // Then:
     final ErrorV1.Error err = verifyException(e,
         message,
-        StandardRestErrorCode.INTERNAL,
+        StandardRestErrorCodes.INTERNAL,
         parameters,
         SAMPLE_ERROR);
     assertEquals(TestRestErrors.SOURCE, err.getSource());
@@ -201,26 +198,11 @@ public final class RestErrorsTest {
     return err;
   }
 
-  enum TestErrorCode implements RestErrorCode {
-    INVALID_FORM_PARAMETERS("InvalidFormParameters", "One or more form parameters are invalid");
-
-    private final String codeName;
-    private final String description;
-
-    public String getCodeName() {
-      return codeName;
-    }
-
-    @Override
-    public String getDescription() {
-      return description;
-    }
-
-    TestErrorCode(String codeName, String description) {
-      this.codeName = codeName;
-      this.description = description;
-    }
-  }
+  static final RestErrorCode INVALID_FORM_PARAMETERS = new SimpleRestErrorCode(
+      400,
+      "InvalidFormParameters",
+      "One or more form parameters are invalid"
+  );
 
   static final class TestRestErrors extends RestErrors {
     static final String SOURCE = "test-rest-errors";
@@ -235,7 +217,7 @@ public final class RestErrorsTest {
     //
 
     HttpRestErrorException invalidFormParameters(Map<String, String> parameters) {
-      final ErrorV1.Error.Builder err = errorBuilder(TestErrorCode.INVALID_FORM_PARAMETERS);
+      final ErrorV1.Error.Builder err = errorBuilder(INVALID_FORM_PARAMETERS);
       for (final Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
         err.addParameters(RestErrors.stringParameter(parameterEntry.getKey(), parameterEntry.getValue()));
       }
@@ -244,7 +226,7 @@ public final class RestErrorsTest {
     }
 
     HttpRestErrorException insufficientPermissions(String resourceName) {
-      return forbidden(errorBuilder(StandardRestErrorCode.FORBIDDEN)
+      return forbidden(errorBuilder(StandardRestErrorCodes.FORBIDDEN)
           .setTarget(resourceName)
           .build());
     }

@@ -5,7 +5,7 @@ package com.truward.brikar.error;
  *
  * @author Alexander Shabanov
  */
-public enum StandardRestErrorCode implements RestErrorCode {
+public enum StandardRestErrorCodes implements RestErrorCode {
 
   BAD_REQUEST(400, "BadRequest", "Unable to process request due to client error"),
 
@@ -29,7 +29,7 @@ public enum StandardRestErrorCode implements RestErrorCode {
   private final String codeName;
   private final String description;
 
-  public int getHttpCode() {
+  public int getHttpStatus() {
     return httpCode;
   }
 
@@ -42,7 +42,7 @@ public enum StandardRestErrorCode implements RestErrorCode {
     return description;
   }
 
-  StandardRestErrorCode(int httpCode, String codeName, String description) {
+  StandardRestErrorCodes(int httpCode, String codeName, String description) {
     this.httpCode = httpCode;
     this.codeName = codeName;
     this.description = description;

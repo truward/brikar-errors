@@ -7,6 +7,8 @@ package com.truward.brikar.error;
  */
 public interface RestErrorCode {
 
+  int getHttpStatus();
+
   String getCodeName();
 
   String getDescription();
