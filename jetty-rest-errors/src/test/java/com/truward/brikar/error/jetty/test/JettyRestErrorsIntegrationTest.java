@@ -8,22 +8,28 @@ import com.truward.brikar.error.parser.RestErrorParser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import javax.security.auth.callback.Callback;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 
@@ -99,6 +105,39 @@ public final class JettyRestErrorsIntegrationTest extends JettyIntegrationTestBa
 
     assertEquals(SOURCE, error.getSource());
     assertEquals(StandardRestErrorCodes.UNAUTHORIZED.getCodeName(), error.getCode());
+  }
+
+  @Test
+  public void shouldResortToDefaultErrorPageIfHeadersAreBroken() throws Exception {
+    final List<Consumer<HttpURLConnection>> testCases = Arrays.asList(
+        c -> {
+          final String brokenMimeType = "*/json";
+          c.setRequestProperty(HttpHeaders.ACCEPT, brokenMimeType);
+        },
+        c -> {
+          final String brokenMimeType = "*\\test 1353";
+          c.setRequestProperty(HttpHeaders.ACCEPT, brokenMimeType);
+        },
+        c -> {
+          // no accept type
+        }
+    );
+
+    final int responseCode = 401;
+    final URL url = new URL(getBaseUrl() + EMIT_ERROR_PATH + '/' + responseCode);
+
+    for (final Consumer<HttpURLConnection> testCase : testCases) {
+      final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestMethod(HttpMethod.GET.name());
+      testCase.accept(connection);
+
+      try {
+        final int actualResponseCode = connection.getResponseCode();
+        assertEquals(responseCode, actualResponseCode);
+      } finally {
+        connection.disconnect();
+      }
+    }
   }
 
   //

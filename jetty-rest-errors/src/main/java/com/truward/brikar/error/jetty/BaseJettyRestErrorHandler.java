@@ -6,6 +6,7 @@ import org.eclipse.jetty.server.AbstractHttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
@@ -33,26 +34,12 @@ public abstract class BaseJettyRestErrorHandler extends ErrorPageErrorHandler {
       Request baseRequest,
       HttpServletRequest request,
       HttpServletResponse response) throws IOException {
-    // transform headers in the request object to easy-to-access HttpHeaders object
-    final HttpHeaders headers = getRequestHeaders(request);
-
-    if (canTryWriteRestError(headers)) {
-      // try to write error using rest-friendly error converters
-      for (final HttpMessageConverter<Object> converter : getRestErrorConverters()) {
-        for (final MediaType acceptMediaType : headers.getAccept()) {
-          AbstractHttpConnection connection = AbstractHttpConnection.getCurrentConnection();
-          if (writeRestError(
-              converter,
-              acceptMediaType,
-              response,
-              connection.getResponse().getStatus(),
-              connection.getResponse().getReason())) {
-            // error has been written, mark request as handled and skip default error processing
-            connection.getRequest().setHandled(true);
-            return;
-          }
-        }
+    try {
+      if (tryWriteRestError(request, response)) {
+        return;
       }
+    } catch (InvalidMediaTypeException ignored) {
+      // ignore errors that can happen due to broken headers
     }
 
     // error left unhandled - delegate to default page error handler
@@ -106,6 +93,32 @@ public abstract class BaseJettyRestErrorHandler extends ErrorPageErrorHandler {
   //
   // Private
   //
+
+  private boolean tryWriteRestError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // transform headers in the request object to easy-to-access HttpHeaders object
+    final HttpHeaders headers = getRequestHeaders(request);
+
+    if (canTryWriteRestError(headers)) {
+      // try to write error using rest-friendly error converters
+      for (final HttpMessageConverter<Object> converter : getRestErrorConverters()) {
+        for (final MediaType acceptMediaType : headers.getAccept()) {
+          AbstractHttpConnection connection = AbstractHttpConnection.getCurrentConnection();
+          if (writeRestError(
+              converter,
+              acceptMediaType,
+              response,
+              connection.getResponse().getStatus(),
+              connection.getResponse().getReason())) {
+            // error has been written, mark request as handled and skip default error processing
+            connection.getRequest().setHandled(true);
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
 
   private boolean writeRestError(
       HttpMessageConverter<Object> messageConverter,

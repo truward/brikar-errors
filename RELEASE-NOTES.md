@@ -1,7 +1,7 @@
 
 # 2.0.4 (PLANNED)
 
-TBD
+* Fix bug that resulted in 500 error when client sends broken headers
 
 # 2.0.3
 

@@ -111,13 +111,13 @@ public abstract class JettyIntegrationTestBase {
     }
   }
 
+  protected static String getBaseUrl() {
+    return "http://127.0.0.1:" + PORT;
+  }
+
   //
   // Private
   //
-
-  private static String getBaseUrl() {
-    return "http://127.0.0.1:" + PORT;
-  }
 
   private static void initJettyServer(
       Server server,
